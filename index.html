@@ -1,9 +1,48 @@
-<html>
-    <head>
-        <script type="module" src="tmp/main.js"></script>
-    </head>
-    <body>
-        <p style="size: 50px;">TEST</p>
-        <button id="moduleButton">모듈 클릭</button>
-    </body>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오</title>
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
+<body>
+
+    <!-- 사이드바 토글 버튼 -->
+    <button id="sidebar-toggle">&#9776;&#9776;</button>
+
+    <!-- sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>포트폴리오</h2>
+        <div class="menu-item" onclick="toggleMenu('about')">메인 페이지</div>
+        <div class="menu-item" onclick="toggleMenu('study')">논문 스터디</div>
+        <div class="submenu" id="study">
+            <a href="#study-intro">스터디 소개</a>
+            <a href="#study-notes">논문 메모</a>
+            <a href="#study-ppt">발표 자료</a>
+        </div>
+        <div class="menu-item" onclick="toggleMenu('learning')">개인 공부</div>
+        <div class="submenu" id="learning">
+            <a href="#study-cs">컴퓨터 과학</a>
+            <a href="#study-ai">인공지능</a>
+            <a href="#study-db">데이터베이스</a>
+        </div>
+        <div class="menu-item" onclick="toggleMenu('projects')">프로젝트</div>
+        <div class="submenu" id="projects">
+            <a href="#project1">프로젝트 1</a>
+            <a href="#project2">프로젝트 2</a>
+            <a href="#project3">프로젝트 3</a>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="content">
+        <h1>메인 페이지</h1>
+        <p>이곳에 본인의 소개, 사용 가능한 언어, 획득한 자격증, 프로젝트 등을 정리하세요.</p>
+    </div>
+
+    <!-- 모듈 방식으로 JS 불러오기 -->
+    <script type="module" src="./static/js/main.js"></script>
+
+</body>
 </html>
