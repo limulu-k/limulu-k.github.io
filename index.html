@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>포트폴리오</title>
     <link rel="stylesheet" href="static/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -14,20 +16,20 @@
     <!-- sidebar -->
     <div id="sidebar" class="sidebar">
         <h2>포트폴리오</h2>
-        <div class="menu-item" onclick="toggleMenu('about')">메인 페이지</div>
-        <div class="menu-item" onclick="toggleMenu('study')">논문 스터디</div>
+        <div class="menu-item" onclick="toggleMenu('about')" >메인 페이지</div>
+        <div class="menu-item" onclick="toggleMenu('study')">논문 스터디 <span class="arrow">▼</span></div>
         <div class="submenu" id="study">
             <a href="#study-intro">스터디 소개</a>
             <a href="#study-notes">논문 메모</a>
             <a href="#study-ppt">발표 자료</a>
         </div>
-        <div class="menu-item" onclick="toggleMenu('learning')">개인 공부</div>
+        <div class="menu-item" onclick="toggleMenu('learning')">개인 공부<span class="arrow">▼</span></div>
         <div class="submenu" id="learning">
             <a href="#study-cs">컴퓨터 과학</a>
             <a href="#study-ai">인공지능</a>
             <a href="#study-db">데이터베이스</a>
         </div>
-        <div class="menu-item" onclick="toggleMenu('projects')">프로젝트</div>
+        <div class="menu-item" onclick="toggleMenu('projects')">프로젝트<span class="arrow">▼</span></div>
         <div class="submenu" id="projects">
             <a href="#project1">프로젝트 1</a>
             <a href="#project2">프로젝트 2</a>

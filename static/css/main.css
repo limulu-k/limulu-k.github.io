@@ -14,7 +14,7 @@ body {
     position: fixed;
     left: 0;
     top: 0;
-    transform: translateX(0);
+    transform: translateX(0);  /* 기본 상태: 보이는 상태 */
     transition: transform 0.3s ease-in-out;
 }
 
@@ -26,11 +26,20 @@ body {
     cursor: pointer;
     padding: 10px;
     border-bottom: 1px solid gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-item .arrow {
+    transition: transform 0.3s ease-in-out;
 }
 
 .submenu {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
     padding-left: 20px;
+    transition: max-height 0.3s ease-in-out;
 }
 
 .submenu a {
@@ -45,10 +54,10 @@ body {
 }
 
 .content {
-    margin-left: 270px; /* 기본적으로 사이드바 크기만큼 이동 */
-    padding: 20px;
+    margin-left: 270px;
+    padding: 35px 60px;
     flex: 1;
-    transition: margin-left 0.3s ease-in-out; /* 애니메이션 추가 */
+    transition: margin-left 0.3s ease-in-out;
 }
 
 #sidebar-toggle {
@@ -62,7 +71,6 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: left 0.3s ease-in-out;
-    display: block; /* 버튼이 보이도록 설정 */
 }
 
 .body.sidebar-collapsed .content {

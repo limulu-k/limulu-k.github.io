@@ -22,9 +22,26 @@ export function toggleSidebar() {
 
 export function toggleMenu(id) {
     let submenu = document.getElementById(id);
+    let menuItem = document.querySelector(`[onclick="toggleMenu('${id}')"]`);
+    let arrow = menuItem.querySelector('.arrow');
+
     if (submenu) {
-        submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+        let isOpen = submenu.style.maxHeight && submenu.style.maxHeight !== "0px";
+
+        if (isOpen) {
+            submenu.style.maxHeight = "0px";  // 닫힘 애니메이션 적용
+            arrow.style.transform = "rotate(0deg)";
+            setTimeout(() => {
+                submenu.style.display = "none";  // 애니메이션 후 display: none; 적용
+            }, 300);  // 0.3초 후 실행 (CSS 애니메이션 시간과 동일)
+        } else {
+            submenu.style.display = "block"; // 먼저 표시
+            submenu.style.maxHeight = submenu.scrollHeight + "px";  // 펼쳐짐
+            arrow.style.transform = "rotate(180deg)";
+        }
     } else {
         console.error(`Element with ID '${id}' not found.`);
     }
 }
+
+
