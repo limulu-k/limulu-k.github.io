@@ -6,7 +6,7 @@ body {
 }
 
 .sidebar {
-    width: 250px;
+    width: 210px;
     height: 100vh;
     background: #333;
     color: white;
@@ -54,8 +54,8 @@ body {
 }
 
 .content {
-    margin-left: 270px;
-    padding: 35px 60px;
+    margin-left: 250px;
+    padding: 20px;
     flex: 1;
     transition: margin-left 0.3s ease-in-out;
 }
@@ -63,8 +63,8 @@ body {
 #sidebar-toggle {
     position: absolute;
     top: 20px;
-    left: 260px;
-    background: #333;
+    left: 250px;
+    background: rgba(87, 87, 87, 0.9); /* 반투명한 밝은 그레이 색상 적용 */
     color: white;
     border: none;
     padding: 10px 15px;

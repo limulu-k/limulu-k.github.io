@@ -1,0 +1,690 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>25.02.04 Subverting Website Fingerprinting Defenses with Robust Traffic Representation</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="187e8cfa-c68c-806f-8be9-e62613575694" class="page sans"><header><h1 class="page-title">25.02.04 Subverting Website Fingerprinting Defenses with Robust Traffic Representation</h1><p class="page-description"></p></header><div class="page-body"><h1 id="187e8cfa-c68c-80b8-a8fa-f64b10861960" class="">요약</h1><figure id="187e8cfa-c68c-803a-93f9-dd8f14935b5b" class="image"><a href="image%204.png"><img style="width:432px" src="image%204.png"/></a></figure><ul id="187e8cfa-c68c-8054-b052-f39c37da9352" class="bulleted-list"><li style="list-style-type:disc">Robust Fingerpring 제안<ul id="187e8cfa-c68c-8047-ac26-dd24e9ad806b" class="bulleted-list"><li style="list-style-type:circle">공격자: 목표 클라이언트의 네트워크 내에서 패킷을 감청할 수 있지만 수정,지연,삭제,복호화는 안되며 클라이언트와 Tor 가드 노드 간 연결에서만 패킷 흔적을 수집 가능</li></ul></li></ul><ul id="187e8cfa-c68c-8008-b523-e668e7ab43d1" class="bulleted-list"><li style="list-style-type:disc">Tor 트래픽 포착을 위한 TAM(Traffic Aggregation Matrix) 제안<ul id="187e8cfa-c68c-80bd-9807-ce60fa94a7fa" class="bulleted-list"><li style="list-style-type:circle">해당 방법을 통해 공격자는 다양한 방어 기법들로부터 들어 나는 공통의 고수준 트래픽 특징을 학습하는 CNN 훈련 가능</li></ul></li></ul><ul id="187e8cfa-c68c-80ab-b353-ee8c2cfeeda9" class="bulleted-list"><li style="list-style-type:disc">해당 논문에서는 다양한 상황에서 높은 공격 정확도를 달성한는 RF(RoubustFingerprinting) 제안<ul id="187e8cfa-c68c-8092-906b-d120099476fe" class="bulleted-list"><li style="list-style-type:circle">다양한 방어모델에 대해 딥러닝 WF모델을 개선할 수 있는 강건한 트래픽 표현 탐구가 주 목표</li></ul><ul id="187e8cfa-c68c-8004-aca7-da0df31c6d66" class="bulleted-list"><li style="list-style-type:circle">구성<ul id="187e8cfa-c68c-8021-b669-eb8222e2bdd6" class="bulleted-list"><li style="list-style-type:square">TAM(Traffic Aggregation Matrix): 정보성이 높은 트래픽 표현<ul id="187e8cfa-c68c-806c-9848-d4c9884247bc" class="bulleted-list"><li style="list-style-type:disc">패킷 방향 및 타이밍</li></ul><ul id="187e8cfa-c68c-8004-88eb-c782991ec572" class="bulleted-list"><li style="list-style-type:disc">방어 전략에 덜 영향 받는 추출된 차별적 특징(<em>이게 뭔데?</em>)</li></ul></li></ul><ul id="187e8cfa-c68c-807a-8c4f-dac3bbe5459e" class="bulleted-list"><li style="list-style-type:square">딥러닝 기반 분류기</li></ul></li></ul></li></ul><ul id="187e8cfa-c68c-80b8-b15c-dab373e8eab5" class="bulleted-list"><li style="list-style-type:disc">RF 방어 전략 개발<ul id="187e8cfa-c68c-805b-a6a0-eca22af51fe7" class="bulleted-list"><li style="list-style-type:circle">패킷 패딩 및 지연 전략 기반 </li></ul><ul id="187e8cfa-c68c-80c7-8f1c-eb2f2ffdfa8c" class="bulleted-list"><li style="list-style-type:circle">수집한 패킷들을 바탕으로 특정 웹사이트의 트래픽 패턴을 다른 웹 사이트의 패턴처럼 보이도록 변형함</li></ul></li></ul><h3 id="187e8cfa-c68c-80f3-aee4-efbd041a7e40" class="">WF를 방어해야하는 이유</h3><ol type="1" id="187e8cfa-c68c-8047-a743-c9088079bd33" class="numbered-list" start="1"><li>익명성 보호<ul id="187e8cfa-c68c-8054-8ecc-daa12a8be745" class="bulleted-list"><li style="list-style-type:disc">언론인, 활동가, 반정부 인사, 난민, 인권단체 등 일부 계층들은 감시의 대상이 될 수 있으며 WF는 해당 계층의 네트워크 사용 익명성에 악영향을 준다 함</li></ul></li></ol><ol type="1" id="187e8cfa-c68c-80e3-bcbb-dccbb0a37b14" class="numbered-list" start="2"><li>온라인 프라이버시 보호<ul id="187e8cfa-c68c-80cc-b926-c271a6b95e92" class="bulleted-list"><li style="list-style-type:disc">WF 공격은 사용자가 방문한 웹사이트를 식별하기 때문에, 이를 통해 개인의 관심사, 행동, 라이프스타일을 추적 가능</li></ul><ul id="187e8cfa-c68c-8047-a39a-cf29ad0d32b7" class="bulleted-list"><li style="list-style-type:disc">예를 들어, 광고 회사나 악성 행위자가 데이터를 활용해 사용자 프로파일링을 강화할 수 있음</li></ul></li></ol><ol type="1" id="187e8cfa-c68c-802f-ac09-e34f93382cb1" class="numbered-list" start="3"><li>검열 및 감시 방지<ul id="187e8cfa-c68c-804c-9a82-d0d68ec07332" class="bulleted-list"><li style="list-style-type:disc">국가 및 타 단체가 사용자의 트래픽 감시를 통한 웹사이트 접속을 제한 할 수 있음</li></ul><ul id="187e8cfa-c68c-80fa-a5e5-f5ec6fd221c2" class="bulleted-list"><li style="list-style-type:disc">이를 위해 네트워크 사용자는 검열을 <strong>우회</strong>하려고 하는데 WF는 이를 <strong>무력화 </strong>시킴</li></ul></li></ol><h1 id="187e8cfa-c68c-8045-b5e8-f3e1e6706217" class="">Background</h1><h2 id="187e8cfa-c68c-80fc-85e0-cbb6e8e80ceb" class="">WF(Website Fingerprinting)란</h2><ul id="187e8cfa-c68c-80be-a7af-ea0a54c58c8f" class="bulleted-list"><li style="list-style-type:disc">피해자가 방문하는 웹사이트를 Tor 트래픽을 분석하여 식별하는 수동 공격 방식</li></ul><ul id="187e8cfa-c68c-8085-b81b-cfb0a43a92ef" class="bulleted-list"><li style="list-style-type:disc">암호화된  연결의 부가 채널 정보(패킷 크기, 방향, 패킷 간 지연 시간)를 통해 익명성 파괴</li></ul><ul id="187e8cfa-c68c-804d-afa3-c0c4032b2a42" class="bulleted-list"><li style="list-style-type:disc">크게 2가지 범주로 나뉨<ul id="187e8cfa-c68c-80b8-9fbf-cfef431c4eec" class="bulleted-list"><li style="list-style-type:circle">전통적인 머신러닝 기반 WF 공격<ul id="187e8cfa-c68c-801d-8d1a-c89daf43ebfe" class="bulleted-list"><li style="list-style-type:square">SVM, k-NN, Random Forest등이 사용됨</li></ul><ul id="187e8cfa-c68c-8079-a7e0-e20aec9ae7d4" class="bulleted-list"><li style="list-style-type:square">크게 3가지 공격 유형 존재<ul id="196e8cfa-c68c-80cf-ab5a-e02aec1f14d4" class="bulleted-list"><li style="list-style-type:disc"><strong>k-NN</strong>: 가장 가까운 k개의 샘플을 기준으로 웹사이트를 예측.</li></ul><ul id="196e8cfa-c68c-80f9-ba1a-fb3d9d726ab4" class="bulleted-list"><li style="list-style-type:disc"><strong>CUMUL</strong>: 누적 트래픽 분포를 활용해 웹사이트를 식별.</li></ul><ul id="196e8cfa-c68c-80e5-92a3-ca3a1af46b42" class="bulleted-list"><li style="list-style-type:disc"><strong>k-FP</strong>: k-NN과 다른 특징 벡터를 조합한 방식.</li></ul></li></ul></li></ul><ul id="187e8cfa-c68c-80cb-b332-f14106d018f0" class="bulleted-list"><li style="list-style-type:circle">딥러닝 기반 WF 공격<ul id="187e8cfa-c68c-805a-9ba4-c5008bc20798" class="bulleted-list"><li style="list-style-type:square">CNN, Triplet Netwokr, Generative Adversrial Network 사용됨</li></ul><ul id="187e8cfa-c68c-800f-8619-cf71360089d0" class="bulleted-list"><li style="list-style-type:square">타입<ul id="187e8cfa-c68c-809d-afa7-c61f4ebcdbd5" class="bulleted-list"><li style="list-style-type:disc">AWF: 패킷 방향 시퀀스의 특징 추출 엔지니어링 과정을 자동화</li></ul><ul id="187e8cfa-c68c-8059-b863-d76eb80a3279" class="bulleted-list"><li style="list-style-type:disc">DF: CNN을 기반으로 자동화된 패킷 방향 시퀀스와 추가적인 컨볼루션 블록을 입력으로 줌, WTF-PAD를 처음으로 무력화한 공격임</li></ul><ul id="187e8cfa-c68c-8074-8f9a-ec936f1b7768" class="bulleted-list"><li style="list-style-type:disc">Tik-Tok: DF와 동일한 CNN 구조를 활용한 공격 제안. DF와 달리 입력으로 방향과 원시시간(raw time)의 곱을 사용 하여 개선</li></ul><ul id="187e8cfa-c68c-8031-94e0-ea3d589dc731" class="bulleted-list"><li style="list-style-type:disc">Var-CNN: RestNet 기반의 아키텍처 제안, 패킷의 방향과 패킷 간 시간, 메타데이터르 ㄹ활용하여 WF 분류기를 학습시킴</li></ul><ul id="187e8cfa-c68c-8099-94ee-c441410b0894" class="bulleted-list"><li style="list-style-type:disc">TF: Triplet 네트워크 사용, 이질적인 테스트 셋에 적용 가능, 방어 전략이 없는 환경 가정</li></ul></li></ul></li></ul></li></ul><h2 id="187e8cfa-c68c-8049-bdbb-cd5f0174e9f9" class="">WF Defense</h2><ul id="187e8cfa-c68c-80a6-a376-e09d0eac66d9" class="toggle"><li><details open=""><summary>방어 기법</summary><ul id="187e8cfa-c68c-80b0-ac72-ddf091968f88" class="bulleted-list"><li style="list-style-type:disc"><strong>트래픽 교란</strong>: 특정 전략에 따라 더미 패킷을 추가하거나 실제 패킷의 전송을 지연시켜 원본 흔적의 트래픽 패턴을 교란</li></ul><ul id="187e8cfa-c68c-808d-ba53-fbdb2a2774b9" class="bulleted-list"><li style="list-style-type:disc"><strong>트래픽 분할</strong>: 트래픽을 분할하여 웹사이트의 원본 핑거프린트를 파괴</li></ul><table id="187e8cfa-c68c-80cc-a264-f6456aeeb78b" class="simple-table"><tbody><tr id="187e8cfa-c68c-80a9-82dd-feff8bfa54d5"><td id="jcwi" class="" style="width:79px">이름</td><td id="NDKI" class="" style="width:86.140625px">타입</td><td id="iupl" class="">설명</td><td id="gBIe" class="">장점</td><td id="ghiL" class="">단점</td></tr><tr id="187e8cfa-c68c-80a6-bd55-e9bfb19f3d94"><td id="jcwi" class="" style="width:79px">Tamaraw</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class="">트래픽 <strong>크기와 타이밍을 정규화</strong>하여 Fingerprinting 공격을 방어</td><td id="gBIe" class="">정규화된 트래픽으로 분석에 어려움을 줌</td><td id="ghiL" class="">트래픽 크기와 시간 정규화로 인한 높은 네트워크 오버헤드와 네트워크 성능 저하 야기</td></tr><tr id="187e8cfa-c68c-8067-aaba-da5e510a94e1"><td id="jcwi" class="" style="width:79px">WTF-PAD</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class="">동적으로 패<strong>딩을 추가</strong>하여 트래픽 패턴을 은폐</td><td id="gBIe" class="">동적이고 가벼운 방식, 실시간 은폐 가능</td><td id="ghiL" class="">정교한 공격 기법에는 비효율적, 완벽한 은폐를 보장하지 않음</td></tr><tr id="187e8cfa-c68c-8081-9572-cc8a10cf2ccd"><td id="jcwi" class="" style="width:79px">Walkie-Taklie</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class=""><strong>반이중 통신 방식</strong>을 활용해 트래픽 패턴을 숨김</td><td id="gBIe" class="">낮은 오버헤드로 효과적인 패턴 은폐, 트래픽 타이밍 분석에 어려움을 줌</td><td id="ghiL" class="">트래픽 전송 지연 발생, 반이중 방식 때문에 애플리케이션 성능 저하 유발</td></tr><tr id="187e8cfa-c68c-8004-b8ab-d0e403c6ad6a"><td id="jcwi" class="" style="width:79px">FRONT</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class=""><strong>트래픽 방향과 크기를 변형</strong></td><td id="gBIe" class="">적은적인 방어로 다양한 공격에 대응 가능, 비교적 적은 네트워크 오버헤드</td><td id="ghiL" class="">구현이 복잡하며 리소스 요구량 높음, 특정 고급 공격에 취약</td></tr><tr id="187e8cfa-c68c-8014-beb4-df28c835e0dd"><td id="jcwi" class="" style="width:79px">Blanket</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class="">신경망을 활용해 <strong>트래픽을 생성</strong>하고 패턴을 숨김</td><td id="gBIe" class="">최신 공격 기법에도 효과적 방어 가능</td><td id="ghiL" class="">높은 계산 비용과 실행 시간이 길어지며 복잡성이 높아 구현에 어려움이 있음</td></tr><tr id="187e8cfa-c68c-8016-a389-d49f93b09316"><td id="jcwi" class="" style="width:79px">RegulaTor</td><td id="NDKI" class="" style="width:86.140625px">Disturbing Traffic</td><td id="iupl" class=""><strong>Tor 네트워크</strong>의 트래픽을 정규화하여 Fingerprinting 방어</td><td id="gBIe" class="">높은 방어 효과로 Tor의 사용자 익명성 방어</td><td id="ghiL" class="">네트워크 오버헤드와 성능 저하, Tor외 타 네트워크 환경에서 활용이 제한적</td></tr><tr id="187e8cfa-c68c-80a4-aabf-e8cc979fb95e"><td id="jcwi" class="" style="width:79px">TrafficSilber</td><td id="NDKI" class="" style="width:86.140625px">Splitting Traffic</td><td id="iupl" class="">트래픽을 여러 <strong>흐름으로 분할</strong>하여 분석을 어렵게 만듦</td><td id="gBIe" class="">트래픽 분산으로 분석 및 추적이 어려움</td><td id="ghiL" class="">네트워크 복잡성과 오버헤드 크게 증가</td></tr></tbody></table></details></li></ul><ul id="187e8cfa-c68c-80bb-bcba-e2038d9c411b" class="bulleted-list"><li style="list-style-type:disc">최신 방어 기법 트랜드<ul id="187e8cfa-c68c-80e7-a25d-d6d58b9adf8c" class="bulleted-list"><li style="list-style-type:circle">트래픽 표현 방식(패킷 방향, 흔적), 딥러닝 활용</li></ul></li></ul><ul id="187e8cfa-c68c-80a1-8891-e52d23865e4a" class="bulleted-list"><li style="list-style-type:disc">공격자가 목표 서버의 세부 사항을 알고 있다는 가정 하에 공격 테스트를 진행해도 성공률이 낮다.<ul id="187e8cfa-c68c-80e2-9efb-d3659f9ff00e" class="bulleted-list"><li style="list-style-type:circle">SOTA의 일종인 DF와 Var-CNN은 WTF-PAD에 대해 90%이상의 성공률을 보임</li></ul><ul id="187e8cfa-c68c-80cc-971c-e36386e4ed6e" class="bulleted-list"><li style="list-style-type:circle">하지만 Front기법에서는 75%미만, TrafficSilver에는 60%미만의 성공률을 보임</li></ul></li></ul><ul id="187e8cfa-c68c-809b-8f88-cefe8003df2a" class="bulleted-list"><li style="list-style-type:disc">방어를 위한 여러 방안들이 제시되었지만 <strong>교란 패킷 처리 능력 부족</strong>, <strong>레이블 누출</strong> 문제, 다양한 방어 기법에 대한 <strong>적응력이 부족</strong>함</li></ul><ul id="187e8cfa-c68c-809c-8004-d6bcf310bd7d" class="bulleted-list"><li style="list-style-type:disc">RF는 이들을 보완하기 위해 제안됨</li></ul><p id="187e8cfa-c68c-8064-b023-ebef455b188b" class="">
+</p><p id="187e8cfa-c68c-80db-9a7d-f01a22a4917c" class="">
+</p><p id="187e8cfa-c68c-8003-bb07-e9d4bd2c4608" class="">
+</p><p id="187e8cfa-c68c-8030-8208-dd6e9f506225" class="">Section 2에서는 WF 공격 및 방어와 관련된 연구를 검토하고,<br/>Section 3에서는 위협 모델과 설계 목표를 설명합니다.<br/>Section 4에서는 TAM 설계를,<br/>Section 5에서는 RF를 제시합니다.<br/>Section 6에서는 RF 및 기존 WF 공격의 성능을 평가하기 위한 광범위한 실험을 수행합니다.<br/>Section 7에서는 RF에 대한 대책을 설명하며,<br/>Section 8에서는 제한점과 향후 연구 방향을 논의하고,<br/>Section 9에서 논문을 마무리합니다.<br/></p><p id="187e8cfa-c68c-800b-8773-f6408c8ecc10" class="">
+</p><p id="187e8cfa-c68c-80d6-a919-ed6e6abebd40" class="">
+</p><h1 id="187e8cfa-c68c-8071-8906-c6868b1731e8" class="">Threat Model and Attack Goals<br/><br/></h1><p id="187e8cfa-c68c-8080-95ae-e4e01bd800d7" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

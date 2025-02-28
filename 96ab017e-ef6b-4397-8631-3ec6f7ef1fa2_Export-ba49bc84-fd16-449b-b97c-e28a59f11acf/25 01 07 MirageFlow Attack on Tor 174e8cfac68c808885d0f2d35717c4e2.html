@@ -1,0 +1,706 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>25.01.07 MirageFlow Attack on Tor</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="174e8cfa-c68c-8088-85d0-f2d35717c4e2" class="page sans"><header><h1 class="page-title">25.01.07 <strong>MirageFlow Attack on Tor</strong></h1><p class="page-description"></p></header><div class="page-body"><p id="174e8cfa-c68c-809f-92da-fb929fe7c821" class="">
+</p><h1 id="174e8cfa-c68c-80ae-9675-f1dfeb45613b" class="">01. Introduction</h1><ul id="174e8cfa-c68c-80fe-8299-d66aa7ec0972" class="bulleted-list"><li style="list-style-type:disc">일반적인 Tor의 공격 벡터<ul id="174e8cfa-c68c-80ec-b34d-de02bc2f8466" class="bulleted-list"><li style="list-style-type:circle">웹사이트 핑거프린팅</li></ul><ul id="174e8cfa-c68c-805f-9102-c2d3e87a1246" class="bulleted-list"><li style="list-style-type:circle">라우팅</li></ul><ul id="174e8cfa-c68c-80cf-918d-d2eea83ca99c" class="bulleted-list"><li style="list-style-type:circle">end-to-end correlation(종 단간 상관관계)</li></ul><ul id="174e8cfa-c68c-80e3-978f-f12a83ef7e25" class="bulleted-list"><li style="list-style-type:circle">congestion(혼잡)</li></ul><ul id="174e8cfa-c68c-805e-9399-f6e60854d10e" class="bulleted-list"><li style="list-style-type:circle">side channel attacks</li></ul><p id="174e8cfa-c68c-8099-9073-dd35b7947b4d" class="">⇒ 각 공격의 공통점: 공격자는 자신의 서버나 릴레이로 최소한의 리소스로 최대한 많은 사용자의 트래픽을 유도해야함</p></li></ul><p id="174e8cfa-c68c-8025-91ca-fb32cb5ef929" class="">
+</p><h2 id="174e8cfa-c68c-80b5-9a8d-ec04e406f4af" class="">Tor 대역폭 측정 메커니즘과 그 약점</h2><ul id="174e8cfa-c68c-803a-9477-e8abe028392f" class="bulleted-list"><li style="list-style-type:disc">메커니즘<ul id="174e8cfa-c68c-8028-9249-c554c7764632" class="bulleted-list"><li style="list-style-type:circle">정기적으로 네트워크의 릴레이에 대한 상태 정보를 <strong>합의 파일(consensus file)</strong> 형태로 저장, 유지, 관리함</li></ul><ul id="174e8cfa-c68c-808e-baa0-fdfb4d2651b0" class="bulleted-list"><li style="list-style-type:circle">해당 목록에는 각 릴레이에서 사용 가능한 추정 대역폭이 포함됨</li></ul><ul id="174e8cfa-c68c-800b-93ce-e99ad7930ba3" class="bulleted-list"><li style="list-style-type:circle">Tor 클라이언트는 가장 최근의 합의 파일을 통해 경로를 선택함</li></ul><ul id="174e8cfa-c68c-80a2-b4b7-d42f19ef10de" class="bulleted-list"><li style="list-style-type:circle">이때 대역폭 측정은 릴레이를 통과하는 두 개의 릴레이로 측정 회로를 설정하고 웹 서버로 데이터를 업로드/다운로드 하는 방식으로 대역폭 측정함</li></ul></li></ul><ul id="174e8cfa-c68c-80e8-a2f2-fd574134cf4b" class="bulleted-list"><li style="list-style-type:disc">약점<ul id="174e8cfa-c68c-808a-a815-cb56088ba1f2" class="bulleted-list"><li style="list-style-type:circle">문제는 해당 측정 과정에서 2개의 릴레이만으로 구성됨</li></ul><ul id="174e8cfa-c68c-80a3-9da9-efb3ac80193e" class="bulleted-list"><li style="list-style-type:circle">익명성을 보장하려면 최소 3개의 릴레이를 통과해야함(<strong>middle, exit, bridge</strong>)</li></ul><ul id="174e8cfa-c68c-808d-a8ed-d986c7ba9d78" class="bulleted-list"><li style="list-style-type:circle">시나리오<ul id="174e8cfa-c68c-8034-beff-c677f72e3bf6" class="bulleted-list"><li style="list-style-type:square">공격자가 측정을 탐지 했을 때, 공격자는 모든 대역폭을 해당 측정에 몰아넣어 최대 177배의 부풀린 대역폭을 얻을 수 있음</li></ul><ul id="174e8cfa-c68c-80ab-b0e8-ebc91768edda" class="bulleted-list"><li style="list-style-type:square">이를 통해 실제 대역폭 용량과 상관없이 거짓 정보를 제공, 사용자 트래픽 점유율을 높이려고 시도함</li></ul></li></ul></li></ul><p id="174e8cfa-c68c-80d1-a952-efcb8656f3f1" class="">
+</p><h2 id="174e8cfa-c68c-801b-9a8c-e5151fb570a3" class="">첫 발견: 릴레이 운영자의 무제한 리소스 공유 가능</h2><ul id="174e8cfa-c68c-80c5-83eb-e23196fcb9f9" class="bulleted-list"><li style="list-style-type:disc">현재 Tor는 릴레이 운영자가 물리적 머신이나 네트워크 링크와 같은 공유 자원을 사용할 수 없도록 제한하지 않음</li></ul><ul id="174e8cfa-c68c-8052-b21a-d2f3ade9a558" class="bulleted-list"><li style="list-style-type:disc">공격자가 여러 릴레이를 단일 물리적 호스트의 가상머신으로 실행가능</li></ul><ul id="174e8cfa-c68c-80e3-935b-c1d086130f6b" class="bulleted-list"><li style="list-style-type:disc">별도의 물리적 머신에 위치하더라도 동일한 네트워크 링크를 공유 가능<p id="174e8cfa-c68c-80d2-ae4e-c786555445b1" class="">⇒ 공격자가 측정 트래픽을 탐지, 대역폭을 늘려 공격자가 제어하는 릴레이 노드에 타겟팅하여 사용하도록 만들 수 있음</p></li></ul><ul id="174e8cfa-c68c-80e5-9f9d-ed3808a6d843" class="bulleted-list"><li style="list-style-type:disc">주요 기여(?)<ul id="174e8cfa-c68c-805a-9a84-c3870b138ce4" class="bulleted-list"><li style="list-style-type:circle"><strong>새로운 대역폭 인플레이션 공격 전략:</strong> 클러스터 내 릴레이 간 자원 공유를 활용하여 대역폭을 부풀리는 MirageFlow 전략을 제안 및 조사</li></ul><ul id="174e8cfa-c68c-8060-8129-e81449cefbbc" class="bulleted-list"><li style="list-style-type:circle"><strong>두 가지 MirageFlow 변형:</strong> C-MirageFlow(Co-resident Relays)와 D-MirageFlow(Dedicated Server)를 제안합니다.</li></ul><ul id="174e8cfa-c68c-803d-8651-dadb837fce9b" class="bulleted-list"><li style="list-style-type:circle"><strong>공격 평가:</strong> <a href="https://github.com/torproject/chutney">소규모 Tor 테스트 네트워크</a>에서 두 가지 공격을 평가하여 각각 최대 n과 n ∗ N의 인플레이션 계수 달성, 전체 서버 클러스터 크기가 15hop 이내면 선형적으로 효과가 증가하지만 매우 커질 시 선형 성장의 약 76%로 제한됨</li></ul><ul id="174e8cfa-c68c-8030-9ce8-de71b273dd5f" class="bulleted-list"><li style="list-style-type:circle"><strong>기존 대역폭 스캐닝 대안의 저항성 연구:</strong> <ul id="174e8cfa-c68c-805a-9b57-c83901250680" class="bulleted-list"><li style="list-style-type:square"><strong>최신 머신러닝(ML) 기반의 대역폭 측정 기법</strong>이 <strong>MirageFlow</strong>와 같은 공격에서 효과적으로 방어할 수 있는지 검토하였지만 기계학습을 통해 F1스코어 99%, 0.5ms로 정확히 탐지 가능한걸 확인하였음<p id="174e8cfa-c68c-80a4-9e77-ca0067ccc356" class="">⇒ 릴레이 증가가 근본적인 해결책이 되지 못함</p></li></ul><ul id="174e8cfa-c68c-80b4-99b4-c6bcecb8a126" class="bulleted-list"><li style="list-style-type:square">측정 트래픽을 완전히 제거하고 대역폭 추정을 위해 사용자 트래픽을 활용하는 방법만이 인플레이션에 탄력적인 대역폭 측정 솔루션을 제공할 수 있을 것으로 판단함</li></ul></li></ul><ul id="174e8cfa-c68c-8010-86d7-eba8cbbb1f6b" class="bulleted-list"><li style="list-style-type:circle"><strong>Tor 네트워크 분석:</strong> <ul id="174e8cfa-c68c-80b5-81db-e8a746845054" class="bulleted-list"><li style="list-style-type:square">실제 네트워크에서 MirageFlow 공격이 진행중인지 분석을 실시</li></ul><ul id="174e8cfa-c68c-8091-ac07-fc48d2fa3323" class="bulleted-list"><li style="list-style-type:square">특정 릴레이에서 해당 특성이 드러났다고 함<ul id="174e8cfa-c68c-80b4-95b4-dae0fb04a8fd" class="bulleted-list"><li style="list-style-type:disc">유사한 대역폭과 가동 시간(uptime)을 가진 릴레이 패밀리<p id="174e8cfa-c68c-803a-98c8-e5744fb7b36b" class="">⇒ 특정 릴레이 그룹이 비슷한 대역폭, 가동시간을 공유하고 있음<div class="indented"><p id="174e8cfa-c68c-80c6-984c-edf1fa8df93d" class="">⇒ 이는 해당 릴레이들이 공동으로 MirageFlow 공격을 수행함을 알 수 있음</p></div></p></li></ul><ul id="174e8cfa-c68c-8046-8334-d0e14eddbaca" class="bulleted-list"><li style="list-style-type:disc">대체 포트 번호 사용<p id="174e8cfa-c68c-8015-a3de-e902f4491e6a" class="">→ 일부 릴레이에서 Tor가 사용하지 않은 대체 포트 번호를 사용하고 있음이 관측됨<div class="indented"><p id="174e8cfa-c68c-8072-b17d-fb31c62bccc9" class="">⇒ 여러 릴레이가 Co-resident실행(같은 물리적 서버에서 동시 실행)되고 있음을 시사함</p></div></p></li></ul></li></ul><ul id="174e8cfa-c68c-806f-9775-c47ade3d37cb" class="bulleted-list"><li style="list-style-type:square">그러나 이러한 특징을 통해 완벽히 악의적인 공격을 확인할 수 있는 방법이 부족함</li></ul><ul id="174e8cfa-c68c-8098-b2e2-c85ea1acb749" class="bulleted-list"><li style="list-style-type:square">이를 위해 해당 전략 제안<p id="174e8cfa-c68c-806c-92e3-cd56fed156ab" class="">⇒ 발견한 특성(대역폭, uptime, 대체포트 사용)을 기반으로 MirageFlow 공격을 탐지</p><p id="174e8cfa-c68c-801a-8446-d877f048654d" class="">
+</p></li></ul></li></ul></li></ul><hr id="174e8cfa-c68c-806f-91cf-eeb30fd6f660"/><h1 id="174e8cfa-c68c-8030-bf4e-e2ef5005ecea" class="">02. Background</h1><h2 id="174e8cfa-c68c-8034-8116-da81b07c8ed1" class="">Tor Relays and Circuits</h2><ul id="174e8cfa-c68c-80a7-9c55-d88ab6b9c65b" class="bulleted-list"><li style="list-style-type:disc">Tor 유저는 최소 3개 이상의 relay를 통해 네트워크를 구성함<ul id="174e8cfa-c68c-807b-bc44-e02fc0928c0e" class="bulleted-list"><li style="list-style-type:circle">Guard relay<ul id="174e8cfa-c68c-80dd-a5ac-fcb29f5769c1" class="bulleted-list"><li style="list-style-type:square">최초 hop, 연결의 진입점 역할을 함</li></ul><ul id="174e8cfa-c68c-80f1-beec-ff65bff9fa24" class="bulleted-list"><li style="list-style-type:square">로테이션 되기 전에 최소 2-3개월 사용됨</li></ul><ul id="174e8cfa-c68c-8054-b9e4-fcc98e4bac29" class="bulleted-list"><li style="list-style-type:square">이를 위해선 충분한 가동 시간(8~68D)과 최소 대역(2Mbps)를 충족해야함</li></ul></li></ul><ul id="174e8cfa-c68c-807f-b49b-eb3cd120e63c" class="bulleted-list"><li style="list-style-type:circle">exit relay<ul id="174e8cfa-c68c-8043-9856-e37a1e36ba31" class="bulleted-list"><li style="list-style-type:square">익명성 보존 통신 회로의 최종 릴레이</li></ul><ul id="174e8cfa-c68c-8074-83db-f88d9baa8d31" class="bulleted-list"><li style="list-style-type:square">미지막 hop을 의미</li></ul><ul id="174e8cfa-c68c-80c0-9907-ef4a6d8ead6b" class="bulleted-list"><li style="list-style-type:square">클라이언트의 트래픽을 Tor 네트워크를 넘어 인터넷의 목적지로 전송함</li></ul></li></ul><ul id="174e8cfa-c68c-8060-a241-e56f7422db0a" class="bulleted-list"><li style="list-style-type:circle">최종적으로 exit relay의 ip만 보이게 되며 guard와 exit 사이를 middle relay라 함</li></ul></li></ul><p id="174e8cfa-c68c-80f1-911d-ced7bf302d3f" class="">
+</p><h2 id="174e8cfa-c68c-8085-9a02-e99a67a2a312" class="">Directory and Bandwidth Authorities</h2><p id="174e8cfa-c68c-8098-af00-ce7416226fc2" class="">
+</p><h2 id="174e8cfa-c68c-800d-9ee9-e2a1bd0371c1" class="">Bandwidth Measurements in Tor</h2><p id="174e8cfa-c68c-8017-982f-dbc5effbf059" class="">최초 SBWS(Simple Bandwidth Scanner)가 대역폭 측정 시 0~1 GB를 다운, 5초 이내에 다운시 0~16 or 16~32mb를 늘려 다시 다운, 10초 이내에 응답시 해당 범위 만큼 용량을 다운 시킴으로서 대역폭 측정</p><p id="0d682d18-3668-4452-8f7e-bf85bc798eb1" class="">
+</p><p id="f6fa1dfe-b1e3-46f9-9500-a5b246c31b13" class="">
+</p><h2 id="174e8cfa-c68c-80d3-a86b-c5a74f5a6ee1" class="">Building Consensus</h2><p id="174e8cfa-c68c-80db-b975-ded9655c1de1" class="">
+</p><p id="174e8cfa-c68c-80d5-8467-dfa1f956e090" class="">
+</p><p id="174e8cfa-c68c-8054-adee-d1f960cb3bdb" class="">
+</p><p id="174e8cfa-c68c-80bd-a4f1-e104801248e2" class="">
+</p><p id="174e8cfa-c68c-80cb-b05c-fc9a6ee5b1b1" class="">
+</p><p id="174e8cfa-c68c-8057-be77-ddbf29e74b82" class="">
+</p><p id="174e8cfa-c68c-80a0-a379-ca2cdc0e8322" class="">
+</p><p id="174e8cfa-c68c-80f7-83a1-fbe731956541" class="">
+</p><p id="174e8cfa-c68c-8000-9cb1-c97e496457fe" class="">
+</p><p id="174e8cfa-c68c-803e-8826-cd3ffa681d55" class="">
+</p><p id="174e8cfa-c68c-80b3-a3ae-f1a2b329b8e6" class="">
+</p><p id="174e8cfa-c68c-809f-8cfa-fbcb63876a47" class="">
+</p><ul id="174e8cfa-c68c-8059-a598-e026dccd6d11" class="bulleted-list"><li style="list-style-type:disc">MirageFLow 종류<ul id="174e8cfa-c68c-809f-ac10-e1a70e68118f" class="bulleted-list"><li style="list-style-type:circle"><strong>C-MirageFlow</strong><ul id="174e8cfa-c68c-80d6-96b4-f28940ebc6ac" class="bulleted-list"><li style="list-style-type:square">여러 개의 Tor 릴레이를 단일 서버 내에서 함께 운영하며, 측정 트래픽이 감지되면 해당 릴레이에 서버의 모든 자원을 집중시켜 대역폭 측정치를 부풀리는 방식</li></ul><ul id="174e8cfa-c68c-80e3-9eeb-c9cdd1b461e4" class="bulleted-list"><li style="list-style-type:square"><strong>대역폭을 최대 n배로 늘림</strong>(n: 단일 서버에서 호스팅된 클러스터 크기)</li></ul></li></ul><ul id="174e8cfa-c68c-801e-8e0f-ffc0a189b81d" class="bulleted-list"><li style="list-style-type:circle"><strong>D-MirageFlow</strong><ul id="174e8cfa-c68c-80c9-9608-c24a3edb25c8" class="bulleted-list"><li style="list-style-type:square">여러 서버에 분산된 릴레이 클러스터를 구성하고, 측정 트래픽이 감지되면 이를 강력한 전용 서버로 우회시켜 대역폭을 부풀리는 방식</li></ul><ul id="174e8cfa-c68c-80ea-b2a8-f763b9fb59d2" class="bulleted-list"><li style="list-style-type:square"><strong>대역폭을 최대 n*N/2배로 늘림</strong>(N: 서버수)</li></ul></li></ul><p id="174e8cfa-c68c-80a0-93d4-d4aa24cbfed5" class="">⇒ 결과적으로 100 MB/s 대역폭의 10개의 전용서버와 109개의 릴레이 클러스터를 사용하여 Tor <strong>네트워크의 트래픽 절반을 제어 가능해짐</strong></p></li></ul><ul id="174e8cfa-c68c-8031-9118-f36645ada744" class="bulleted-list"><li style="list-style-type:disc">위험한 이유<ul id="174e8cfa-c68c-80c3-be7c-d81e89d75989" class="bulleted-list"><li style="list-style-type:circle"><strong>Tor 네트워크의 기본 보안 모델과 사용자 프라이버시를 근본적으로 위협하기 때문</strong></li></ul><ul id="174e8cfa-c68c-80e1-8e48-c44eb3bb4fc8" class="bulleted-list"><li style="list-style-type:circle">Tor는 인터넷 사용자의 익명성을 보장하기 위해 설계된 네트워크이지만, MirageFlow는 Tor 네트워크의 대역폭 측정 및 트래픽 분배 메커니즘의 취약점을 악용하여 <strong>공격자가 트래픽을 조작</strong>하거나 <strong>더 큰 제어권을 확보</strong>할 수 있게 만듦</li></ul><ul id="174e8cfa-c68c-8058-bb23-d4402fdf2c28" class="bulleted-list"><li style="list-style-type:circle">대역폭 측정 조작의 여파<ul id="174e8cfa-c68c-8085-8bab-c558ed12ead9" class="bulleted-list"><li style="list-style-type:square">Tor 네트워크는 릴레이의 대역폭을 측정하여 트래픽을 할당</li></ul><ul id="174e8cfa-c68c-80d4-8842-f0f519179b79" class="bulleted-list"><li style="list-style-type:square">MirageFlow는 가짜 대역폭 데이터를 만들어 공격자 릴레이가 더 많은 사용자 트래픽을 처리하도록 만듦<p id="174e8cfa-c68c-8024-afad-f144b0872ce5" class="">⇒공격자는 더 많은 사용자의 데이터를 처리하거나 관찰 가능<div class="indented"><p id="174e8cfa-c68c-80b2-8596-c1c9f5efa0b0" class="">⇒ 더 많은 사용자의 트래픽 분석 가능</p><p id="174e8cfa-c68c-806b-b52e-fcd2c66b4bba" class="">⇒ 공격자가 시작 및 종료 릴레이를 동시에 통제하는 경우 사용자의 활동 추적도 가능</p></div></p></li></ul></li></ul></li></ul><p id="17fe8cfa-c68c-805c-9830-cf854eafc49f" class="">
+</p><h1 id="17fe8cfa-c68c-80a2-9782-ecf8d9f11fdb" class="">결론 및 주관</h1><ul id="17fe8cfa-c68c-80c7-9542-e214c6895a1c" class="bulleted-list"><li style="list-style-type:disc">해당 취약점은 Tor의 익명성을 위협하는 취약점으로 보완책을 제안, 테스트 해보았지만 완벽하지 않음</li></ul><ul id="17fe8cfa-c68c-8025-8964-c763c2ba50f4" class="bulleted-list"><li style="list-style-type:disc">Tor 관계자는 이미 해당 취약점을 인지하고 있는 듯 함(영상 뒤에 해당 내용과 관련된 정황 O)</li></ul><ul id="17fe8cfa-c68c-8072-a052-ffa0b9f5882e" class="bulleted-list"><li style="list-style-type:disc"></li></ul><p id="17fe8cfa-c68c-8075-8c67-d96099df73a0" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

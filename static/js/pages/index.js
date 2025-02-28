@@ -8,16 +8,21 @@ export function toggleSidebar() {
         return;
     }
 
-    if (sidebar.style.transform === "translateX(-250px)" || !sidebar.style.transform) {
+    let isCollapsed = document.body.classList.contains("sidebar-collapsed");
+
+    if (isCollapsed) {
         sidebar.style.transform = "translateX(0)";
-        toggleButton.style.left = "260px";
-        content.style.marginLeft = "270px"; // 메인 페이지 이동
+        toggleButton.style.left = "250px";
+        content.style.marginLeft = "250px";
+        document.body.classList.remove("sidebar-collapsed");
     } else {
-        sidebar.style.transform = "translateX(-250px)";
+        sidebar.style.transform = "translateX(-240px)";
         toggleButton.style.left = "10px";
-        content.style.marginLeft = "20px"; // 메인 페이지 왼쪽으로 이동
+        content.style.marginLeft = "20px";
+        document.body.classList.add("sidebar-collapsed");
     }
 }
+
 
 
 export function toggleMenu(id) {

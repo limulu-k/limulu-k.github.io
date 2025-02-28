@@ -1,0 +1,705 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>25.02.10 Explaining Deep Learning-based Network Intrusion Detection Systems for Active Intrusion Responses</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="191e8cfa-c68c-80c7-bc74-f18cbe8ab762" class="page sans"><header><h1 class="page-title">25.02.10 <strong>Explaining Deep Learning-based Network Intrusion Detection Systems for Active Intrusion Responses</strong></h1><p class="page-description"></p></header><div class="page-body"><p id="192e8cfa-c68c-808e-a808-eb550c5cf75c" class="">
+</p><h1 id="192e8cfa-c68c-806f-8b7a-f23ec0063305" class="">연구 배경 및 동기</h1><ul id="192e8cfa-c68c-80d7-9f3b-e8a97b18833a" class="bulleted-list"><li style="list-style-type:disc">최근 딥러닝 기반 NIDS가 많은 연구에서 우수한 성능을 보인다고 함</li></ul><ul id="192e8cfa-c68c-80b1-88dd-d04792d3728a" class="bulleted-list"><li style="list-style-type:disc">NIDS의 기본 원리는 <strong>네트워크 트래픽을 모델에 학습시켜 점수를 부여, 이를 기반으로 악성 여부를 분류하는 것</strong>임<ul id="192e8cfa-c68c-80d7-8e60-f724cb7db645" class="bulleted-list"><li style="list-style-type:circle">기존의 탐지 시스템은 크게 두가지로 나뉨<ul id="192e8cfa-c68c-8075-a37f-d1f790653a3f" class="bulleted-list"><li style="list-style-type:square">시그니처 기반: 기존 패턴과 비교를 통한 탐지</li></ul><ul id="192e8cfa-c68c-804c-8925-fb2a88bc9c5b" class="bulleted-list"><li style="list-style-type:square">통계기반: 이상 행위 분석을 통한 탐지</li></ul></li></ul></li></ul><ul id="192e8cfa-c68c-8037-8700-dbb1a34d3903" class="bulleted-list"><li style="list-style-type:disc">기존 모델과 NIDS의 비교<ul id="192e8cfa-c68c-8043-b0ec-fa606a8065c6" class="bulleted-list"><li style="list-style-type:circle">장점<ul id="192e8cfa-c68c-80f0-aa89-d1675dd54988" class="bulleted-list"><li style="list-style-type:square">미탐지(Zero-day attack) 탐지 가능</li></ul><ul id="192e8cfa-c68c-80ac-b1ba-f7642ca441a4" class="bulleted-list"><li style="list-style-type:square">복잡한 패턴 탐지에 뛰어남</li></ul></li></ul><ul id="192e8cfa-c68c-80fa-a95b-d2fc917a7264" class="bulleted-list"><li style="list-style-type:circle">단점<ul id="192e8cfa-c68c-808c-9052-fbe7abbf08c4" class="bulleted-list"><li style="list-style-type:square">탐지 결과의 <strong>해석 가능성 부족</strong></li></ul><ul id="192e8cfa-c68c-8087-bc3c-de5896a3817e" class="bulleted-list"><li style="list-style-type:square">오류 발생시 높은 비용<ul id="194e8cfa-c68c-8049-973a-d4231894b789" class="bulleted-list"><li style="list-style-type:disc">FN(False Negative, 탐지 실패): </li></ul><ul id="194e8cfa-c68c-80ef-baac-e8d7174c22e9" class="bulleted-list"><li style="list-style-type:disc">FP(False Positive, 오탐): </li></ul></li></ul></li></ul></li></ul><h1 id="194e8cfa-c68c-80dd-a7fd-c7cb92e0b4dc" class="">기존 연구의 한계점</h1><ol type="1" id="194e8cfa-c68c-802c-bff5-c17bbdfdda93" class="numbered-list" start="1"><li>탐지 결과와 실행 가능한 해석 간의 의미적인 차이(semanti gap)이 존재<ul id="194e8cfa-c68c-8024-bb6b-efdb3901cab1" class="bulleted-list"><li style="list-style-type:disc">네트워크 운영자가 탐지된 이상을 바탕으로 즉각적인 방어 조치에 어려움 발생함</li></ul></li></ol><ol type="1" id="194e8cfa-c68c-8078-9c8f-eb01b42bf3a6" class="numbered-list" start="2"><li>탐지 오류(FP, FN) 발생시 가능<ul id="194e8cfa-c68c-8051-a7ad-cfcbc4f5ecab" class="bulleted-list"><li style="list-style-type:disc">오탐의 경우 → 운영자는 오탐을 막기 위해 코스트를 소모하게 됨</li></ul><ul id="194e8cfa-c68c-80d2-930b-d50da9cfe72f" class="bulleted-list"><li style="list-style-type:disc">미탐의 경우 → 보안 위협 초래</li></ul></li></ol><ol type="1" id="194e8cfa-c68c-80e8-841e-e1edb41cb342" class="numbered-list" start="3"><li>능동적인 방어 조치 불가능<ul id="194e8cfa-c68c-80eb-b96d-d72e595a50c5" class="bulleted-list"><li style="list-style-type:disc">기존 DL-NIDS는 <strong>탐지된 위협에 대해 수동적인 경고(Alert)만 제공</strong>하고, 실질적인 대응(방어 규칙 적용)은 사람이 해야 함</li></ul><ul id="194e8cfa-c68c-802b-96bb-f6631fb9d6d2" class="bulleted-list"><li style="list-style-type:disc">설명 기법을 적용하면 탐지 결과를 분석하여, <strong>자동으로 방어 규칙을 생성하고 네트워크 방어 시스템에 적용할 수 있음</strong></li></ul></li></ol><p id="194e8cfa-c68c-80a2-825d-f4d7e5c7d0fd" class="">⇒ 따라서 DLNIDS 가 탐지 하는 과정에 대한 설명 가능성이 중요함</p><h2 id="194e8cfa-c68c-80ed-be5e-f3d0b4e9de42" class="">XNIDS의 필요성</h2><p id="194e8cfa-c68c-8086-96c5-d5e6c618ddd8" class="">기존의 방법들은 특정 입력 샘플과 그에 대한 예측 결과를 해석하는 <strong>국소적 설명</strong>을 제공하는데 집중함</p><p id="194e8cfa-c68c-8001-99a2-c335392ba0c0" class="">→ ex) Gradients, Integrated Gradients(IG), Layer-wise Relevance Propagation(LRP), LIME 등</p><p id="194e8cfa-c68c-801e-aed2-d4bc17c61168" class="">하지만 위 기존 설명 방법들은 효과적이지 못함</p><ol type="1" id="194e8cfa-c68c-80c7-9c6e-d57d4ed6aa3a" class="numbered-list" start="1"><li>DL-NIDS의 입력 데이터는 시간 종속적(time-dependent)임<ul id="194e8cfa-c68c-8059-858c-dfcc55b02cd2" class="bulleted-list"><li style="list-style-type:disc">기존 설명 기법들은 대부분 <strong>단일 입력 샘플에 대한 해석</strong>만 수행<table id="194e8cfa-c68c-805c-8015-dc87e2d51dcd" class="simple-table"><tbody><tr id="194e8cfa-c68c-8026-9cb6-f22b22e23509"><td id="onUF" class="">방법</td><td id="ceb;" class="" style="width:466px">문제점</td></tr><tr id="194e8cfa-c68c-8057-b1fa-e5be52362021"><td id="onUF" class="">Gradients(IG, LRP)</td><td id="ceb;" class="" style="width:466px">현재 입력만을 고려하여 과거 트래픽 패턴을 반영하지 못함</td></tr><tr id="194e8cfa-c68c-8034-a920-e2c8c2be7d2c"><td id="onUF" class="">LIME, SHAP</td><td id="ceb;" class="" style="width:466px">개별 샘플에 대한 지역적(local) 설명만 제공하여 시간적 흐름을 반영할 수 없음</td></tr><tr id="194e8cfa-c68c-80e8-a988-df7008a3ab80"><td id="onUF" class="">LEMNA</td><td id="ceb;" class="" style="width:466px">보안 애플리케이션에 특화된 방법이지만, 시계열 특성을 반영하지 못함</td></tr></tbody></table></li></ul></li></ol><ol type="1" id="194e8cfa-c68c-80f0-a1a0-d07481b71949" class="numbered-list" start="2"><li>특징 의존성(Feature Dependency)을 반영하지 못함<ul id="194e8cfa-c68c-807c-8431-db8dff372547" class="bulleted-list"><li style="list-style-type:disc">네트워크 트래픽 데이터는 <strong>구조적인 특징(feature dependency)</strong> 을 가지고 있으나 <strong>모든 특징을 독립적인 개별 요소로 가정</strong>하기 때문에 관계를 반영하지 못함</li></ul><ul id="194e8cfa-c68c-8012-891b-f58010eafc03" class="bulleted-list"><li style="list-style-type:disc">ex)<table id="194e8cfa-c68c-8011-9c1c-d7d50acd07cf" class="simple-table"><tbody><tr id="194e8cfa-c68c-8039-8e88-cdfbb2dcf54f"><td id="Ki|l" class="">방법</td><td id="m_=v" class="" style="width:460px">문제점</td></tr><tr id="194e8cfa-c68c-80eb-b7f9-f2456c63d0de"><td id="Ki|l" class="">Gradients(IG, LRP)</td><td id="m_=v" class="" style="width:460px">각 뉴런의 기여도를 개별적으로 분석하지만, 특징 간의 구조적 종속성을 고려하지 않음</td></tr><tr id="194e8cfa-c68c-80c4-87de-c4698caa7d55"><td id="Ki|l" class="">LIME, SHAP</td><td id="m_=v" class="" style="width:460px">각 특징(feature)의 중요도를 개별적으로 계산하므로 특징 간의 관계를 반영하지 못함</td></tr></tbody></table></li></ul><p id="195e8cfa-c68c-80c8-b7c2-e63ef9985074" class="">
+</p></li></ol><ol type="1" id="194e8cfa-c68c-805f-8c4e-c458614863bf" class="numbered-list" start="3"><li><strong>방어 규칙(Defense Rules) 생성의 어려움</strong><ul id="194e8cfa-c68c-80c9-982f-c02a5cf7acd9" class="bulleted-list"><li style="list-style-type:disc"><strong>정확성(Precision) vs. 일반화(Generalization)</strong><ul id="194e8cfa-c68c-80e8-8d3e-f9c1a0b64773" class="bulleted-list"><li style="list-style-type:circle"><strong>너무 구체적인 규칙 → 과적합(Overfitting) 발생, 관리 부담 증가</strong></li></ul><ul id="194e8cfa-c68c-8038-bd54-fc0f93d30211" class="bulleted-list"><li style="list-style-type:circle"><strong>너무 일반적인 규칙 → 정상 트래픽까지 차단하는 부작용</strong></li></ul></li></ul><ul id="194e8cfa-c68c-80fc-bf0a-fb0ef5586257" class="bulleted-list"><li style="list-style-type:disc"><strong>다양한 방어 시스템과의 호환성</strong><ul id="194e8cfa-c68c-8003-9801-c548dde2688a" class="bulleted-list"><li style="list-style-type:circle">OpenFlow, IP Table 등 <strong>각 방어 시스템마다 규칙 형식이 다름</strong> → 범용적인(Unified) 규칙이 필요</li></ul></li></ul><p id="194e8cfa-c68c-8014-928c-cc0fc644fbdf" class="">→ XNIDS는 정확한 방어 규칙을 생성하는 것을 목표로 함</p></li></ol><h1 id="194e8cfa-c68c-8066-b3cc-f62d2e95a2ae" class="">연구 목표: XNIDS(NIDS 설명 모델)</h1><h2 id="194e8cfa-c68c-801b-bf6b-ec623b77378b" class="">해결해야 하는 목표</h2><ol type="1" id="194e8cfa-c68c-8081-9505-cbb1abce88ba" class="numbered-list" start="1"><li>시간적인 연관성 반영</li></ol><ol type="1" id="194e8cfa-c68c-801a-9d92-c3f5ea8c181c" class="numbered-list" start="2"><li>트래픽 간의 특징 의존성 반영</li></ol><ol type="1" id="194e8cfa-c68c-80da-8528-dfab1b6145d3" class="numbered-list" start="3"><li>실용적인 방어 규칙 생성을 위해 정밀성과 일반화 사이의 균형</li></ol><ol type="1" id="194e8cfa-c68c-80f9-956f-cf042ec0cfbb" class="numbered-list" start="4"><li>다양한 방어 도구에 사용 가능한 보편적인 방어 규칙 생성</li></ol><h2 id="194e8cfa-c68c-80a3-8064-dacee650c42c" class="">핵심 기법</h2><ol type="1" id="194e8cfa-c68c-804e-becd-e0378a3aff7b" class="numbered-list" start="0"><li><strong>최종 목표</strong><figure id="194e8cfa-c68c-803f-8dab-f7249d8be898" class="image" style="text-align:center"><a href="image%205.png"><img style="width:384px" src="image%205.png"/></a></figure><ul id="194e8cfa-c68c-8002-a9fb-f4ba56481587" class="bulleted-list"><li style="list-style-type:disc">DL-NIDS의 탐지 결과를 <strong>최대한 정확하게 설명(fidelity 유지)하면서도</strong>,</li></ul><ul id="194e8cfa-c68c-804c-aa5b-d367658944d4" class="bulleted-list"><li style="list-style-type:disc"><strong>불필요한 특징을 최소화(sparsity 적용)</strong></li></ul><ul id="194e8cfa-c68c-80da-8bcd-fbecfbf7eb67" class="bulleted-list"><li style="list-style-type:disc"><strong>탐지된 패킷이 과거 입력의 영향을 받았을 때, 최소한의 과거 입력만 사용하도록 선택</strong></li></ul></li></ol><p id="194e8cfa-c68c-808f-a3b4-cd604f7cba45" class=""><strong>1. 히스토리 입력 근사 (Approximating History Inputs)</strong></p><ul id="194e8cfa-c68c-8079-8d9b-ea48b97d28e6" class="bulleted-list"><li style="list-style-type:disc">DL-NIDS는 단일 입력만 분석하는 것이 아니라 <strong>과거의 네트워크 트래픽까지 고려해야 함</strong></li></ul><ul id="194e8cfa-c68c-8017-bf88-f5e636b69797" class="bulleted-list"><li style="list-style-type:disc"><strong>XNIDS는 탐지 결과에 영향을 미치는 중요한 과거 입력을 자동으로 선택</strong></li></ul><ul id="194e8cfa-c68c-80fe-9aa8-f436761ebae8" class="bulleted-list"><li style="list-style-type:disc">사용된 수식<figure id="194e8cfa-c68c-8041-9fbe-c338dc9b1359" class="image" style="text-align:center"><a href="image%206.png"><img style="width:272px" src="image%206.png"/></a></figure><ul id="194e8cfa-c68c-8082-9a95-c88444c6f94d" class="bulleted-list"><li style="list-style-type:circle">f는 DL-NIDS이며 오차율이 임의의 값보다 작은 가장 작은 l을 찾는게 목표임</li></ul><ul id="194e8cfa-c68c-804a-9009-f12587dd77ca" class="bulleted-list"><li style="list-style-type:circle">x_t는 현재 탐지된 패킷을 의미(1*d(속성))</li></ul></li></ul><ul id="194e8cfa-c68c-8019-a179-ecd193d34b1c" class="bulleted-list"><li style="list-style-type:disc"><strong>불필요한 입력 제거</strong><ul id="194e8cfa-c68c-8011-9c2b-dbf4a9e91b04" class="bulleted-list"><li style="list-style-type:circle"><strong>호스트 필터</strong>: 같은 호스트에서 발생한 입력을 제거합니다.</li></ul><ul id="194e8cfa-c68c-8053-86a8-d1e976aeb0cf" class="bulleted-list"><li style="list-style-type:circle"><strong>프로토콜 필터</strong>: 동일한 프로토콜을 가진 입력을 제거합니다.</li></ul></li></ul><ul id="194e8cfa-c68c-8072-85b2-e1c9bdba81fa" class="bulleted-list"><li style="list-style-type:disc">최종적으로 X’_t,m 이라는 m*d의 행렬 생성됨</li></ul><p id="194e8cfa-c68c-8097-8b1d-e88253a072d1" class=""><strong>2. 패킷 가중치 랜덤 샘플링</strong></p><ul id="194e8cfa-c68c-8041-8715-f281733e4735" class="bulleted-list"><li style="list-style-type:disc">목표 패킷에서 시간적으로 멀수록 해당 패킷의 특징을 확률적으로 0으로 제거<p id="194e8cfa-c68c-80b1-9c56-ea7d220d9f69" class="">→ 특정 특징(시간 지연)만 제거하여 데이터에서 중요한 요소를 강조&quot;는 과정</p></li></ul><ul id="194e8cfa-c68c-8020-86b2-f3822e0e77da" class="bulleted-list"><li style="list-style-type:disc">사용된 수식<figure id="194e8cfa-c68c-80c3-a692-c61e451e71ad" class="image" style="text-align:center"><a href="image%207.png"><img style="width:186px" src="image%207.png"/></a></figure><figure id="194e8cfa-c68c-80d2-af44-edfbaaa1bd27" class="image" style="text-align:center"><a href="image%208.png"><img style="width:284px" src="image%208.png"/></a></figure></li></ul><ul id="194e8cfa-c68c-8009-8616-e2d5432e9cbf" class="bulleted-list"><li style="list-style-type:disc">최종적으로 m*d 행렬 생성됨</li></ul><p id="194e8cfa-c68c-8097-aea0-cd1e08a66a67" class=""><strong>3. 특징 의존성 분석 (Feature Dependency Analysis)</strong></p><ul id="194e8cfa-c68c-8058-a3f3-db0890618c76" class="bulleted-list"><li style="list-style-type:disc">네트워크 패킷 데이터는 <strong>구조적 특징을 가지므로</strong>, 기존 설명 기법이 모든 특징을 개별 요소로 가정하는 것은 부적절</li></ul><ul id="194e8cfa-c68c-8034-96d9-f6ab5cd08006" class="bulleted-list"><li style="list-style-type:disc"><strong>XNIDS는 특징</strong><strong><span style="border-bottom:0.05em solid"> </span></strong><strong>간의 관계를 분석하여 보다 정확한 설명을 제공</strong></li></ul><ul id="194e8cfa-c68c-806d-9dd6-c2cb7cba275d" class="bulleted-list"><li style="list-style-type:disc">사용된 수식<figure id="194e8cfa-c68c-80ef-a589-e8bfc5752f5e" class="image" style="text-align:center"><a href="image%209.png"><img style="width:404.984375px" src="image%209.png"/></a></figure></li></ul><ul id="194e8cfa-c68c-80e1-b8aa-c5d809493d2d" class="bulleted-list"><li style="list-style-type:disc">각 패킷은 특징 1개를 제외하면 0이됨</li></ul><p id="194e8cfa-c68c-8090-b1f5-e998bb88c240" class=""><strong>4. 희소 그룹 라쏘 (Sparse Group Lasso, SGL)</strong></p><ul id="194e8cfa-c68c-801f-9e96-f13228bac48b" class="bulleted-list"><li style="list-style-type:disc">탐지 결과에 영향을 미치는 <strong>최소한의 핵심 특징만 선택</strong>하여 설명을 단순화</li></ul><ul id="194e8cfa-c68c-80cf-b855-d37838decfb7" class="bulleted-list"><li style="list-style-type:disc"><strong>설명을 간결하고 해석 가능하게 만듦</strong></li></ul><ul id="194e8cfa-c68c-806b-bdf1-ccb30b175b97" class="bulleted-list"><li style="list-style-type:disc">구조적으로 연관관계를 나타내기 위해 해당 방법 사용(2번째 항)</li></ul><ul id="194e8cfa-c68c-803c-831b-c6a31d1cbf5b" class="bulleted-list"><li style="list-style-type:disc">사용된 수식<figure id="194e8cfa-c68c-80d8-959b-f18ac025635d" class="image" style="text-align:center"><a href="image%2010.png"><img style="width:285.9895935058594px" src="image%2010.png"/></a></figure><figure id="194e8cfa-c68c-80a6-b789-e748ef7d586f" class="image" style="text-align:center"><a href="image%2011.png"><img style="width:404.984375px" src="image%2011.png"/></a></figure><ul id="194e8cfa-c68c-8054-81ef-f0a9dca21eaf" class="bulleted-list"><li style="list-style-type:circle">제 1항: 손실 최소화(Fiedelity)<ul id="194e8cfa-c68c-80c1-80ad-ce4dab102ade" class="bulleted-list"><li style="list-style-type:square">DL-NIDS 모델 <code>f(·)</code>를 선형 모델 <code>g(·)</code>로 근사 시킴<p id="194e8cfa-c68c-8022-987f-c35c6c172250" class="">⇒ <strong>XNIDS가 DL-NIDS의 탐지 결과를 최대한 정확하게 설명하도록 학습</strong></p></li></ul></li></ul><ul id="194e8cfa-c68c-80c1-a8bb-d4d3ca651657" class="bulleted-list"><li style="list-style-type:circle">제 2항: 그룹 단위 희소성(Group Sparsity, L2 Regulariztion)<ul id="194e8cfa-c68c-8055-9cd6-d44abfdbc7dd" class="bulleted-list"><li style="list-style-type:square">특정 특징 그룹 전체를 제거할 수 있도록 유도</li></ul><ul id="194e8cfa-c68c-80ba-a933-e3c317487749" class="bulleted-list"><li style="list-style-type:square">그룹 <code>q</code>의 가중치 벡터 <code>β_q</code>의 L2 노름(벡터 크기)을 최소화</li></ul><ul id="194e8cfa-c68c-802c-b29c-c57aedbda6b9" class="bulleted-list"><li style="list-style-type:square"><code>\sqrt{p_q}</code>: 특징 그룹 크기에 따른 가중치 조정 (큰 그룹이 작은 그룹보다 불리해지지 않도록 함)<p id="194e8cfa-c68c-8009-af66-cfb37068e5c8" class="">⇒ 탐지 결과에 영향이 적은 그룹은 <code>β_q = 0</code>이 되어 전체 그룹이 제거됨</p></li></ul></li></ul><ul id="194e8cfa-c68c-805b-8989-fc8c9bfdb3e9" class="bulleted-list"><li style="list-style-type:circle">제 3항: 개별 특징 단위 희소성(Feature Sparsity, L1 Regularization)<ul id="194e8cfa-c68c-80f4-8d41-e9abc923987c" class="bulleted-list"><li style="list-style-type:square">그룹 내에서도 개별 특징을 제거할 수 있도록 유도</li></ul><ul id="194e8cfa-c68c-8033-8167-d5b9fda95e44" class="bulleted-list"><li style="list-style-type:square"><code>β_i = 0</code>이 되도록 강제하여 불필요한 개별 특징을 제거<p id="194e8cfa-c68c-80f9-8013-c833337c266e" class="">⇒ 그룹이 유지되더라도 그 안에서 중요한 몇 개의 특징만 남게 됨</p></li></ul></li></ul><ul id="194e8cfa-c68c-8030-ae2b-e43852895649" class="bulleted-list"><li style="list-style-type:circle">정리<ul id="195e8cfa-c68c-8097-a649-c7a2f0dec043" class="bulleted-list"><li style="list-style-type:square">두번째 arg min 과정을 통해 설명모델 g()를 학습 시키는 것이 최종 목적임</li></ul><ul id="195e8cfa-c68c-8023-b935-f1ba812efbbc" class="bulleted-list"><li style="list-style-type:square">해당 선형근사 모델을 통해 최종적으로 <strong>DL-NIDS 탐지 결과를 최대한 가깝게 예측하는 근사 모델</strong>로 사용됨<br/>← 비선형 모델인 DL-NIDS는 실시간 해석이 어려움으로 탐지한 패킷을 선형 근사하여 대략적인 원인을 찾는것이 목표인것임<br/><br/></li></ul></li></ul></li></ul><p id="195e8cfa-c68c-80f2-81b2-ebe8d4e4c048" class=""><strong>5. 최종 결론</strong></p><ul id="195e8cfa-c68c-8019-9daa-f77b82af4559" class="bulleted-list"><li style="list-style-type:disc">DL-NIDS가 탐지한 탐지 결과를 목표 패킷 x_t로 두어 해당 패킷을 선형 근사를 통한 패킷의 특징을 탐지하여 원인을 도출해 내는것이 결론임</li></ul><p id="195e8cfa-c68c-8008-b719-f89c71653dbf" class="">
+</p><p id="195e8cfa-c68c-800e-9281-e955dfb9cd36" class="">
+</p><h1 id="195e8cfa-c68c-8051-956d-e5971f1aa548" class="">방어 규칙 생성</h1><ul id="195e8cfa-c68c-803d-9997-d8e2852aff24" class="bulleted-list"><li style="list-style-type:disc"><strong>목표:</strong><ul id="195e8cfa-c68c-80e0-a61b-c6082c2cc2dd" class="bulleted-list"><li style="list-style-type:circle"><strong>DL-NIDS가 탐지한 공격 패킷을 기반으로 자동 방어 규칙을 생성</strong></li></ul><ul id="195e8cfa-c68c-8020-a3d1-de791620253e" class="bulleted-list"><li style="list-style-type:circle">다양한 방어 시스템(<code>iptables</code>, <code>OpenFlow</code> 등)에서 적용할 수 있도록 <strong>보편적인 방어 규칙(unified defense rule)으로 변환</strong></li></ul><ul id="195e8cfa-c68c-8098-bfdb-e044a9359786" class="bulleted-list"><li style="list-style-type:circle"><strong>탐지된 패킷을 얼마나 강력하게 차단할지(블록 전략)</strong> 결정 가능</li></ul></li></ul><ul id="195e8cfa-c68c-8025-8d19-f89744eb9c70" class="bulleted-list"><li style="list-style-type:disc">규칙 생성 과정<ol type="1" id="195e8cfa-c68c-8002-b5e3-fd48b8ccd9d6" class="numbered-list" start="1"><li>방어 규칙 범위(Defense Rule Scope) 결정 <p id="195e8cfa-c68c-8087-bf19-e5fe2b318fa3" class="">→ 특정 플로우 / 특정 호스트 / 여러 호스트 차단 여부 결정</p></li></ol><ol type="1" id="195e8cfa-c68c-8074-b7b0-d22a3fb6d28d" class="numbered-list" start="2"><li>차단 전략(Block Strategy) 적용<p id="195e8cfa-c68c-807a-832f-e9b9527598bd" class="">→ 패킷 차단 or 호스트 차단 여부 결정</p></li></ol><ol type="1" id="195e8cfa-c68c-800f-aa7c-e290bbca9b25" class="numbered-list" start="3"><li>보편적인 방어 규칙(Unified Defense Rule) 생성<p id="195e8cfa-c68c-80cc-b5e7-f2098fbd6c25" class="">→ 방어 시스템에 적용 가능하도록 변환</p></li></ol></li></ul><h2 id="195e8cfa-c68c-808b-ac22-c69a4f1943f9" class="">1.  방어 규칙 범위 결정</h2><p id="195e8cfa-c68c-809c-96a0-dcf4c7517785" class="">범위는 3 단위로 결정됨, 플로우 단위, 호스트 단위, 다중 호스트 범위로 구분지을 수 있음</p><ul id="195e8cfa-c68c-8069-ba51-fd95a00d8753" class="bulleted-list"><li style="list-style-type:disc"><strong>플로우 단위 범위 (Per-flow Scope)</strong><ul id="195e8cfa-c68c-8079-9589-fd4428b370ef" class="bulleted-list"><li style="list-style-type:circle">특정 네트워크 플로우에서 전송되는 패킷에만 영향을 미치는 방어 규칙이다.</li></ul><ul id="195e8cfa-c68c-80db-9184-f5fe5e497c18" class="bulleted-list"><li style="list-style-type:circle">예를 들어, 특정 <strong>TCP 연결을 종료하는 방어 규칙</strong>은 플로우 단위 방어 규칙에 해당한다.</li></ul></li></ul><ul id="195e8cfa-c68c-8074-bfe8-cba841dbfe89" class="bulleted-list"><li style="list-style-type:disc"><strong>호스트 단위 범위 (Per-host Scope)</strong><ul id="195e8cfa-c68c-8048-9292-f22d0a845064" class="bulleted-list"><li style="list-style-type:circle">동일한 호스트에서 발생하는 여러 개의 플로우를 차단할 수 있는 방어 규칙이다.</li></ul><ul id="195e8cfa-c68c-800e-ad98-e85edff90596" class="bulleted-list"><li style="list-style-type:circle">예를 들어, <strong>봇(Bot)을 차단하는 방어 규칙</strong>은 호스트 단위 방어 규칙이다.</li></ul></li></ul><ul id="195e8cfa-c68c-80f8-8b22-cdd433041a0c" class="bulleted-list"><li style="list-style-type:disc"><strong>다중 호스트 범위 (Multi-hosts Scope)</strong><ul id="195e8cfa-c68c-8082-b553-c32c4c3e2093" class="bulleted-list"><li style="list-style-type:circle">여러 호스트에서 발생하는 여러 개의 플로우를 차단할 수 있는 방어 규칙이다.</li></ul><ul id="195e8cfa-c68c-80f3-97a0-c210d1b323c9" class="bulleted-list"><li style="list-style-type:circle">예를 들어, <strong>특정 집합의 호스트(예: 봇넷)에서 발생하는 SYN 요청을 차단하는 방어 규칙</strong>은 다중 호스트 범위의 방어 규칙이다.</li></ul></li></ul><p id="195e8cfa-c68c-8060-8f89-ded5625356e8" class="">
+</p><p id="195e8cfa-c68c-80f2-b209-c8c86a2dbb35" class="">해당 범위로 분류하기 위해 탐지결과 설명을 분석한다</p><ul id="195e8cfa-c68c-804b-8d2f-db5ff5200568" class="bulleted-list"><li style="list-style-type:disc">통계 정보(Statistical Information) S 테이블<table id="195e8cfa-c68c-80c3-b617-e45e11db5b18" class="simple-table"><tbody><tr id="195e8cfa-c68c-8017-95f6-c12a3655b668"><td id=";}vO" class="" style="width:120px">필드</td><td id="a&gt;E?" class="" style="width:282px">설명</td></tr><tr id="195e8cfa-c68c-8053-a8e0-ebb8c4926859"><td id=";}vO" class="" style="width:120px">IP_pool</td><td id="a&gt;E?" class="" style="width:282px">입력에 포함된 IP 목록</td></tr><tr id="195e8cfa-c68c-80fa-93e1-f8007929772a"><td id=";}vO" class="" style="width:120px">IP_n</td><td id="a&gt;E?" class="" style="width:282px">동일한 IP에서 발생한 최대 패킷 수</td></tr><tr id="195e8cfa-c68c-800e-af87-fff839382eda"><td id=";}vO" class="" style="width:120px">MAC_n</td><td id="a&gt;E?" class="" style="width:282px">동일한 MAC 주소에서 발생한 최대 패킷 수</td></tr><tr id="195e8cfa-c68c-80ef-8504-fd960a099321"><td id=";}vO" class="" style="width:120px">Port_n</td><td id="a&gt;E?" class="" style="width:282px">동일한 포트에서 발생한 최대 패킷 수</td></tr><tr id="195e8cfa-c68c-8098-84f4-d761ccc0b820"><td id=";}vO" class="" style="width:120px">Protocol_n</td><td id="a&gt;E?" class="" style="width:282px">동일한 프로토콜에서 발생한 최대 패킷 수</td></tr></tbody></table></li></ul><ul id="195e8cfa-c68c-8070-915f-ff915338de7b" class="bulleted-list"><li style="list-style-type:disc">분석 방법<ol type="1" id="195e8cfa-c68c-8090-8c0b-dfcc670e3741" class="numbered-list" start="1"><li>Statistical Information (S)에서 가장 큰 값을 가지는 필드를 확인</li></ol><ol type="1" id="195e8cfa-c68c-8006-a495-e2941cdbe62c" class="numbered-list" start="2"><li>필드를 분석하여 해당하는 방어 규칙 생성<ul id="195e8cfa-c68c-8053-8af8-cad96bb89149" class="bulleted-list"><li style="list-style-type:disc">Protocol_n , Port_n 값이 가장 큰경우<p id="195e8cfa-c68c-8030-a8a6-f2d51fa1d2f6" class="">⇒ 이상 트래픽이 동일한 프로토콜을 사용하는 여러 호스트에서 발생했음을 의미.<div class="indented"><p id="195e8cfa-c68c-806e-9619-f7b29ed41054" class=""><strong>⇒</strong> 다중 호스트(Multi-hosts) 단위의 방어 규칙 적용</p></div></p></li></ul><ul id="195e8cfa-c68c-80c8-9a08-ce0ebbfd1883" class="bulleted-list"><li style="list-style-type:disc">이상 트래픽이 동일한 호스트에서 발생한 경우<p id="195e8cfa-c68c-8086-9670-ffc12b85cb5e" class="">⇒ 호스트 단위(Per-host) 또는 플로우 단위(Per-flow)의 방어 규칙 적용</p></li></ul><ul id="195e8cfa-c68c-80bc-b049-d2a6eab12ac4" class="bulleted-list"><li style="list-style-type:disc">높은 이상치를 포함하는 값들이 많은 경우<p id="195e8cfa-c68c-803e-a810-f3abfb6721bf" class="">⇒ 해당 호스트가 여러 프로토콜을 사용하여 공격을 수행 함<div class="indented"><p id="195e8cfa-c68c-80a0-ab18-c3d135238247" class="">⇒ 호스트 단위(Per-host) 방어 규칙 적용</p></div></p></li></ul></li></ol></li></ul><p id="195e8cfa-c68c-80aa-b9a7-c9c676428e30" class="">
+</p><h2 id="195e8cfa-c68c-80f2-8e11-cbc26ced75aa" class="">2. 차단 전략 적용</h2><p id="195e8cfa-c68c-8031-bb56-d90a1d7f1b9a" class="">네트워크 환경의 변화에 적응할 수 있도록 네트워크 운영자가 설정할 수 있는 보안적 제약</p><ul id="195e8cfa-c68c-8099-9e19-ed304b239454" class="bulleted-list"><li style="list-style-type:disc"><strong>소극적 차단(Passive Block)</strong><ul id="195e8cfa-c68c-801f-91bc-c897ff44a5df" class="bulleted-list"><li style="list-style-type:circle">XNIDS는 악성 플로우(Malicious Flows) 만 차단하는 방어 규칙을 생성한다.</li></ul><ul id="195e8cfa-c68c-8002-8208-f00fe02d3538" class="bulleted-list"><li style="list-style-type:circle">이 전략의 목표는 방어 규칙이 네트워크 환경에 미치는 영향을 최소화하는 것이다.</li></ul></li></ul><ul id="195e8cfa-c68c-8047-8d85-e77a1e6ccbc1" class="bulleted-list"><li style="list-style-type:disc"><strong>적극적 차단(Assertive Block)</strong><ul id="195e8cfa-c68c-8021-9991-fab38f6eb56c" class="bulleted-list"><li style="list-style-type:circle">네트워크 운영자는 DL-NIDS 및 XNIDS가 생성한 방어 규칙을 신뢰하는 경향이 있다.</li></ul><ul id="195e8cfa-c68c-8000-85e5-f7a64ce0635f" class="bulleted-list"><li style="list-style-type:circle">따라서 생성된 방어 규칙을 보다 적극적으로 적용한다.</li></ul></li></ul><ul id="195e8cfa-c68c-8060-9e5d-eadca8b64fa3" class="bulleted-list"><li style="list-style-type:disc"><strong>공격적 차단(Aggressive Block)</strong><ul id="195e8cfa-c68c-805b-aae6-d606d0514012" class="bulleted-list"><li style="list-style-type:circle">XNIDS는 악성 활동(Malicious Activities) 을 근본적으로 차단하기 위해 악성 호스트(Hosts)를 직접 차단하는 경향을 가진다.</li></ul><ul id="195e8cfa-c68c-80f1-9400-c3e8d2292094" class="bulleted-list"><li style="list-style-type:circle">이 전략의 목표는 악성 호스트를 네트워크 환경에서 신속하게 제거하는 것이다.</li></ul></li></ul><p id="195e8cfa-c68c-803e-a8c2-ef13605099a8" class="">
+</p><h2 id="195e8cfa-c68c-8052-a48f-c9be776c32df" class="">3. 보편적인 방어 규칙 생성</h2><p id="195e8cfa-c68c-809c-97ce-d0c4d98e354b" class="">탐지 설명 결과와 실제 적용 가능한 방어 규칙인 <strong>통합 방어 규칙 표현을 제안</strong></p><figure id="195e8cfa-c68c-8034-91ae-d62bafb56309" class="image"><a href="image%2012.png"><img style="width:709.984375px" src="image%2012.png"/></a></figure><ul id="195e8cfa-c68c-80e5-95fe-ddfdbe74c825" class="bulleted-list"><li style="list-style-type:disc">통합 방어규칙 생성<p id="195e8cfa-c68c-80fa-b0de-f1baf5a839fd" class="">방어 규칙 범위를 방어 조치와 연결하기 위해 두 가지 기본적인 연산을 정의한다.</p><ul id="195e8cfa-c68c-803e-b7ed-c46b65e7b6ba" class="bulleted-list"><li style="list-style-type:circle"><strong>drop_flow</strong>: <strong>플로우 단위(Per-flow) 방어 규칙</strong>에서 악성 플로우를 차단.</li></ul><ul id="195e8cfa-c68c-8054-b9f9-e2066f316b96" class="bulleted-list"><li style="list-style-type:circle"><strong>drop_host</strong>: <strong>호스트 단위(Per-host) 방어 규칙</strong>에서 악성 호스트를 차단.</li></ul></li></ul><ul id="195e8cfa-c68c-80d1-8007-fc4bfb4da202" class="bulleted-list"><li style="list-style-type:disc">차단 전략과 연계<p id="195e8cfa-c68c-8070-b430-d3ccfb0db310" class="">차단 전략에 따라 drop_flow 및 drop host 연산이 변경됨</p><ul id="195e8cfa-c68c-8024-971d-e4c458788538" class="bulleted-list"><li style="list-style-type:circle"><strong>소극적 차단(Passive Block)</strong><ul id="195e8cfa-c68c-80e2-a07e-f11aeb60aad1" class="bulleted-list"><li style="list-style-type:square"><code>drop_host</code> 연산을 <code>drop_flow</code> 연산으로 변경.</li></ul></li></ul><ul id="195e8cfa-c68c-80eb-857e-c88ff5a017ee" class="bulleted-list"><li style="list-style-type:circle"><strong>공격적 차단(Aggressive Block)</strong><ul id="195e8cfa-c68c-80b4-b638-fc1853d7a035" class="bulleted-list"><li style="list-style-type:square"><code>drop_flow</code> 연산을 <code>drop_host</code> 연산으로 변경.</li></ul></li></ul><ul id="195e8cfa-c68c-806e-9d4c-d1d45b985793" class="bulleted-list"><li style="list-style-type:circle"><strong>적극적 차단(Assertive Block)</strong><ul id="195e8cfa-c68c-8029-a1a5-ffc33ad2eb45" class="bulleted-list"><li style="list-style-type:square">연산을 변경하지 않고 그대로 유지.</li></ul></li></ul></li></ul><ul id="195e8cfa-c68c-800a-8ba8-f50cb990d47a" class="bulleted-list"><li style="list-style-type:disc">최종 방어 규칙 생성<ul id="195e8cfa-c68c-80e2-89e4-c18b47308ff3" class="bulleted-list"><li style="list-style-type:circle">방어 규칙을 생성할 때, <strong>설정된 연산(Operation)에 따라 엔터티(Entity)를 생성</strong>한다.<p id="195e8cfa-c68c-80ce-a861-eec5d1c9e6f2" class="">ex) <strong>다중 호스트(Multi-host) 방어 규칙을 drop_flow 연산과 함께 생성할 경우</strong>, 플로우(Flow) 엔터티를 재귀적으로 생성한다.</p></li></ul><ul id="195e8cfa-c68c-80e6-ab35-c34fbe54ac70" class="bulleted-list"><li style="list-style-type:circle"><strong>규칙 충돌 방지</strong>를 위해, <strong>우선순위(Priority)를 증가하는 숫자로 설정</strong>한다.</li></ul><ul id="195e8cfa-c68c-80c0-9665-e754ba5ec850" class="bulleted-list"><li style="list-style-type:circle"><strong>Timeout(유효 시간)은 배포 환경에 맞게 조정 가능</strong>하다.</li></ul></li></ul><p id="195e8cfa-c68c-80e6-9600-f0b883062387" class="">⇒</p><p id="195e8cfa-c68c-8052-aef9-d982d980f034" class="">
+</p><p id="195e8cfa-c68c-8067-9f6e-ccd797f1ec55" class="">
+</p><p id="195e8cfa-c68c-80b8-ac18-c2f8ce1753fb" class="">
+</p><p id="195e8cfa-c68c-80f7-8ecf-e89956bd822a" class="">
+</p><p id="195e8cfa-c68c-808c-9771-e958a1bbf0f3" class="">
+</p><p id="195e8cfa-c68c-80bf-aeeb-c38b8caa4208" class="">
+</p><p id="195e8cfa-c68c-8026-a96e-dccf3c5062d2" class="">
+</p><p id="195e8cfa-c68c-805e-a4e1-f7506bc43c17" class="">
+</p><p id="195e8cfa-c68c-8001-b5f2-f6c24e19b5a8" class="">
+</p><p id="195e8cfa-c68c-808c-8986-dd9bc97441b4" class="">
+</p><p id="195e8cfa-c68c-80cc-b28b-de3f809f146b" class="">
+</p><p id="195e8cfa-c68c-803d-919b-cf351792caa9" class="">
+</p><p id="195e8cfa-c68c-807a-b483-d962661ed1f1" class="">
+</p><p id="195e8cfa-c68c-805f-9a6d-df90fc30fee7" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
